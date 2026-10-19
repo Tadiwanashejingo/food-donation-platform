@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import api from "../api/axios";
 import Navbar from "../components/Navbar";
 import Loading from "../components/Loading";
 import { useAuth } from "../context/useAuth";
-import { Link } from "react-router-dom";
 
 function ReceiverDashboard() {
   const { user } = useAuth();
@@ -12,7 +12,7 @@ function ReceiverDashboard() {
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
   const [filterCity, setFilterCity] = useState("");
-  const [activeTab, setActiveTab] = useState("available"); // available | requests
+  const [activeTab, setActiveTab] = useState("available");
 
   const firstName = user?.name?.split(" ")[0] || "Friend";
 
@@ -32,7 +32,7 @@ function ReceiverDashboard() {
     }
   };
 
-  useEffect(() => {
+ useEffect(() => {
   const load = async () => {
     setLoading(true);
     try {
@@ -51,6 +51,38 @@ function ReceiverDashboard() {
 
   load();
 }, []);
+
+  const showAvailableFood = async () => {
+    setActiveTab("available");
+    setLoading(true);
+    try {
+      const params = { status: "available" };
+      if (filterCity.trim()) params.city = filterCity.trim();
+      const res = await api.get("/api/donations", { params });
+      setDonations(res.data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+    setTimeout(() => {
+      document.getElementById("available-food")?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }, 50);
+  };
+
+  const showMyRequests = () => {
+    setActiveTab("requests");
+    setTimeout(() => {
+      document.getElementById("my-requests")?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }, 50);
+  };
+
   const handleSearch = async () => {
     setLoading(true);
     try {
@@ -96,16 +128,10 @@ function ReceiverDashboard() {
             Everyone deserves access to nutritious food.
           </p>
           <div style={styles.welcomeActions}>
-            <button
-              onClick={() => setActiveTab("available")}
-              style={styles.primaryBtn}
-            >
+            <button onClick={showAvailableFood} style={styles.primaryBtn}>
               🔎 Find Available Food
             </button>
-            <button
-              onClick={() => setActiveTab("requests")}
-              style={styles.secondaryBtn}
-            >
+            <button onClick={showMyRequests} style={styles.secondaryBtn}>
               My Requests
             </button>
             <Link to="/impact">
@@ -153,7 +179,7 @@ function ReceiverDashboard() {
         {/* ===== TABS ===== */}
         <div style={styles.tabs}>
           <button
-            onClick={() => setActiveTab("available")}
+            onClick={showAvailableFood}
             style={{
               ...styles.tab,
               ...(activeTab === "available" ? styles.tabActive : {}),
@@ -162,7 +188,7 @@ function ReceiverDashboard() {
             Available Food
           </button>
           <button
-            onClick={() => setActiveTab("requests")}
+            onClick={showMyRequests}
             style={{
               ...styles.tab,
               ...(activeTab === "requests" ? styles.tabActive : {}),
@@ -175,8 +201,7 @@ function ReceiverDashboard() {
         {loading ? (
           <Loading text="Loading..." />
         ) : activeTab === "available" ? (
-          /* ===== AVAILABLE FOOD ===== */
-          <section>
+          <section id="available-food">
             <div style={styles.searchRow}>
               <input
                 type="text"
@@ -235,8 +260,7 @@ function ReceiverDashboard() {
             )}
           </section>
         ) : (
-          /* ===== MY REQUESTS ===== */
-          <section>
+          <section id="my-requests">
             {myRequests.length === 0 ? (
               <div style={styles.empty}>
                 <p style={{ fontSize: 17, marginBottom: 8 }}>
@@ -245,10 +269,7 @@ function ReceiverDashboard() {
                 <p style={{ color: "#64748b", marginBottom: 16 }}>
                   Browse available food and submit a request.
                 </p>
-                <button
-                  onClick={() => setActiveTab("available")}
-                  style={styles.primaryBtn}
-                >
+                <button onClick={showAvailableFood} style={styles.primaryBtn}>
                   Find Available Food
                 </button>
               </div>

@@ -36,6 +36,16 @@ function DonorDashboard() {
     load();
   }, []);
 
+  const openForm = () => {
+    setShowForm(true);
+    setTimeout(() => {
+      document.getElementById("donation-form")?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }, 50);
+  };
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -79,7 +89,6 @@ function DonorDashboard() {
   const totalDonations = donations.length;
   const completed = donations.filter((d) => d.status === "completed").length;
   const available = donations.filter((d) => d.status === "available").length;
-
   const firstName = user?.name?.split(" ")[0] || "Donor";
 
   return (
@@ -90,18 +99,13 @@ function DonorDashboard() {
         {/* ===== WELCOME BANNER ===== */}
         <section style={styles.welcome}>
           <div>
-            <h1 style={styles.welcomeTitle}>
-              Good day, {firstName} 👋
-            </h1>
+            <h1 style={styles.welcomeTitle}>Good day, {firstName} 👋</h1>
             <p style={styles.welcomeText}>
               Thank you for helping reduce food waste and support communities.
               Every meal donated is an opportunity to make a difference.
             </p>
             <div style={styles.welcomeActions}>
-              <button
-                onClick={() => setShowForm(true)}
-                style={styles.primaryBtn}
-              >
+              <button onClick={openForm} style={styles.primaryBtn}>
                 + Donate Food
               </button>
               <Link to="/manage-requests">
@@ -112,38 +116,6 @@ function DonorDashboard() {
               </Link>
             </div>
           </div>
-        </section>
-
-        {/* ===== IMPACT OVERVIEW ===== */}
-        <section style={styles.section}>
-          <h2 style={styles.sectionTitle}>Your Impact Overview</h2>
-          <div style={styles.statsGrid}>
-            <div style={styles.statCard}>
-              <div style={styles.statIcon}>🍱</div>
-              <div style={styles.statNumber}>{totalDonations}</div>
-              <div style={styles.statLabel}>Donations Shared</div>
-            </div>
-            <div style={styles.statCard}>
-              <div style={styles.statIcon}>✅</div>
-              <div style={styles.statNumber}>{completed}</div>
-              <div style={styles.statLabel}>Completed</div>
-            </div>
-            <div style={styles.statCard}>
-              <div style={styles.statIcon}>🟢</div>
-              <div style={styles.statNumber}>{available}</div>
-              <div style={styles.statLabel}>Currently Available</div>
-            </div>
-            <div style={styles.statCard}>
-              <div style={styles.statIcon}>🌍</div>
-              <div style={styles.statNumber}>SDG 2</div>
-              <div style={styles.statLabel}>Zero Hunger</div>
-            </div>
-          </div>
-          <p style={styles.impactStatement}>
-            Your contributions help reduce food waste and provide nourishment
-            to people in need — supporting{" "}
-            <strong>Sustainable Development Goal 2: Zero Hunger</strong>.
-          </p>
         </section>
 
         {/* ===== MESSAGE ===== */}
@@ -159,9 +131,9 @@ function DonorDashboard() {
           </div>
         )}
 
-        {/* ===== CREATE FORM ===== */}
+        {/* ===== CREATE FORM (right under welcome) ===== */}
         {showForm && (
-          <section style={styles.formCard}>
+          <section id="donation-form" style={styles.formCard}>
             <div style={styles.formHeader}>
               <h3 style={{ margin: 0 }}>Share Surplus Food</h3>
               <button
@@ -250,15 +222,44 @@ function DonorDashboard() {
           </section>
         )}
 
+        {/* ===== IMPACT OVERVIEW ===== */}
+        <section style={styles.section}>
+          <h2 style={styles.sectionTitle}>Your Impact Overview</h2>
+          <div style={styles.statsGrid}>
+            <div style={styles.statCard}>
+              <div style={styles.statIcon}>🍱</div>
+              <div style={styles.statNumber}>{totalDonations}</div>
+              <div style={styles.statLabel}>Donations Shared</div>
+            </div>
+            <div style={styles.statCard}>
+              <div style={styles.statIcon}>✅</div>
+              <div style={styles.statNumber}>{completed}</div>
+              <div style={styles.statLabel}>Completed</div>
+            </div>
+            <div style={styles.statCard}>
+              <div style={styles.statIcon}>🟢</div>
+              <div style={styles.statNumber}>{available}</div>
+              <div style={styles.statLabel}>Currently Available</div>
+            </div>
+            <div style={styles.statCard}>
+              <div style={styles.statIcon}>🌍</div>
+              <div style={styles.statNumber}>SDG 2</div>
+              <div style={styles.statLabel}>Zero Hunger</div>
+            </div>
+          </div>
+          <p style={styles.impactStatement}>
+            Your contributions help reduce food waste and provide nourishment
+            to people in need — supporting{" "}
+            <strong>Sustainable Development Goal 2: Zero Hunger</strong>.
+          </p>
+        </section>
+
         {/* ===== RECENT DONATIONS ===== */}
         <section style={styles.section}>
           <div style={styles.sectionHeader}>
             <h2 style={styles.sectionTitle}>Your Recent Donations</h2>
             {!showForm && (
-              <button
-                onClick={() => setShowForm(true)}
-                style={styles.smallPrimary}
-              >
+              <button onClick={openForm} style={styles.smallPrimary}>
                 + New Donation
               </button>
             )}
@@ -274,10 +275,7 @@ function DonorDashboard() {
               <p style={{ color: "#64748b", marginBottom: 20 }}>
                 Start by creating your first donation and help someone in need.
               </p>
-              <button
-                onClick={() => setShowForm(true)}
-                style={styles.primaryBtn}
-              >
+              <button onClick={openForm} style={styles.primaryBtn}>
                 + Create Your First Donation
               </button>
             </div>
