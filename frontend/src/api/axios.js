@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:8000", // your FastAPI backend
+  baseURL: "https://food-donation-platform-1a6b.onrender.com", // your FastAPI backend
 });
 
 // Automatically attach the token if it exists
