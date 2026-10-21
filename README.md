@@ -6,6 +6,12 @@ Aligned with **UN SDG 2 – Zero Hunger**.
 
 ---
 
+## 🌐 Live Demo
+
+- **Frontend:** https://food-donation-platform-eosin.vercel.app
+- **Backend API:** https://food-donation-platform-1a6b.onrender.com
+---
+
 ## ✨ Features
 
 ### Donor
