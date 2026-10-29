@@ -45,7 +45,6 @@ function ManageRequests() {
       <Navbar />
 
       <div style={styles.container}>
-        {/* Header */}
         <div style={styles.header}>
           <div>
             <h1 style={styles.title}>Manage Requests</h1>
@@ -58,7 +57,6 @@ function ManageRequests() {
           </Link>
         </div>
 
-        {/* Overview cards */}
         <div style={styles.statsGrid}>
           <div style={styles.statCard}>
             <div style={styles.statNumber}>{requests.length}</div>
@@ -96,7 +94,6 @@ function ManageRequests() {
           </div>
         )}
 
-        {/* List */}
         {loading ? (
           <Loading text="Loading requests..." />
         ) : requests.length === 0 ? (
@@ -151,6 +148,35 @@ function ManageRequests() {
                   >
                     {r.status}
                   </span>
+
+                  {/* Contact box after accept */}
+                  {r.status === "accepted" && (
+                    <div style={styles.contactBox}>
+                      <strong style={{ color: "#137333" }}>
+                        Contact receiver to arrange pickup
+                      </strong>
+                      <p style={styles.contactText}>
+                        {r.receiver_name && (
+                          <>
+                            Name: {r.receiver_name}
+                            <br />
+                          </>
+                        )}
+                        {r.receiver_phone && (
+                          <>
+                            Phone: {r.receiver_phone}
+                            <br />
+                          </>
+                        )}
+                        {r.receiver_email && <>Email: {r.receiver_email}</>}
+                        {!r.receiver_phone && !r.receiver_email && (
+                          <span style={{ color: "#64748b" }}>
+                            No phone/email on receiver profile
+                          </span>
+                        )}
+                      </p>
+                    </div>
+                  )}
                 </div>
 
                 <div style={styles.actions}>
@@ -302,6 +328,19 @@ const styles = {
     fontSize: 12,
     fontWeight: 600,
     textTransform: "capitalize",
+  },
+  contactBox: {
+    marginTop: 12,
+    padding: 12,
+    background: "#e6f4ea",
+    borderRadius: 8,
+    border: "1px solid #c6e6c8",
+  },
+  contactText: {
+    margin: "8px 0 0",
+    color: "#1F2933",
+    lineHeight: 1.5,
+    fontSize: 14,
   },
   actions: {
     display: "flex",

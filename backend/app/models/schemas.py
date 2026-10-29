@@ -53,7 +53,9 @@ class Token(BaseModel):
 class FoodDonationCreate(BaseModel):
     title: str = Field(..., min_length=3, max_length=150)
     description: Optional[str] = None
-    food_type: Literal["cooked", "packaged", "fruits", "vegetables", "bakery", "dairy", "other"] = "cooked"
+    food_type: Literal[
+        "cooked", "packaged", "fruits", "vegetables", "bakery", "dairy", "other"
+    ] = "cooked"
     quantity: str = Field(..., min_length=1)
     expiry_date: datetime
     pickup_address: Address
@@ -103,9 +105,16 @@ class RequestOut(BaseModel):
     status: str
     requested_at: datetime
     updated_at: Optional[datetime] = None
+
+    # Extra info
     food_title: Optional[str] = None
-    receiver_name: Optional[str] = None
     donor_id: Optional[str] = None
+    donor_name: Optional[str] = None
+    donor_phone: Optional[str] = None
+    donor_email: Optional[str] = None
+    receiver_name: Optional[str] = None
+    receiver_phone: Optional[str] = None
+    receiver_email: Optional[str] = None
 
     model_config = ConfigDict(populate_by_name=True)
 

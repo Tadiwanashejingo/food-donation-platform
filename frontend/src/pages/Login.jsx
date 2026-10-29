@@ -18,7 +18,6 @@ function Login() {
 
     try {
       const user = await login(email, password);
-
       if (user.role === "donor") navigate("/donor");
       else if (user.role === "receiver") navigate("/receiver");
       else if (user.role === "admin") navigate("/admin");
@@ -32,53 +31,72 @@ function Login() {
 
   return (
     <div style={styles.page}>
-      <div style={styles.card}>
-        <div style={styles.brand}>
-          <span style={styles.logo}>🌍 FoodBridge</span>
-          <p style={styles.tagline}>Connecting surplus food with communities</p>
+      {/* LEFT PANEL — mission / message */}
+      <div style={styles.left}>
+        <div style={styles.leftContent}>
+          <div style={styles.brand}>🌍 FoodBridge</div>
+          <h1 style={styles.headline}>
+            Share surplus food.
+            <br />
+            Support your community.
+          </h1>
+          <p style={styles.message}>
+            FoodBridge connects donors with people who need meals — reducing
+            waste and fighting hunger with dignity.
+          </p>
+
+          <div style={styles.points}>
+            <div style={styles.point}>🍱 Donors list surplus food easily</div>
+            <div style={styles.point}>🤝 Receivers request food nearby</div>
+            <div style={styles.point}>📊 Track real community impact</div>
+          </div>
+
+          <p style={styles.sdg}>Aligned with UN SDG 2 — Zero Hunger</p>
         </div>
+      </div>
 
-        <h2 style={styles.title}>Welcome back</h2>
-        <p style={styles.subtitle}>Sign in to continue</p>
+      {/* RIGHT PANEL — login form */}
+      <div style={styles.right}>
+        <div style={styles.card}>
+          <h2 style={styles.title}>Welcome back</h2>
+          <p style={styles.subtitle}>Log in to continue to FoodBridge</p>
 
-        {error && <div style={styles.error}>{error}</div>}
+          {error && <div style={styles.error}>{error}</div>}
 
-        <form onSubmit={handleSubmit}>
-          <div style={styles.field}>
-            <label style={styles.label}>Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              style={styles.input}
-              placeholder="Enter your email"
-            />
-          </div>
+          <form onSubmit={handleSubmit}>
+            <div style={styles.formGroup}>
+              <label style={styles.label}>Email</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                style={styles.input}
+                placeholder="you@example.com"
+              />
+            </div>
 
-          <div style={styles.field}>
-            <label style={styles.label}>Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              style={styles.input}
-              placeholder="Enter your password"
-            />
-          </div>
+            <div style={styles.formGroup}>
+              <label style={styles.label}>Password</label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                style={styles.input}
+                placeholder="••••••••"
+              />
+            </div>
 
-          <button type="submit" style={styles.button} disabled={loading}>
-            {loading ? "Signing in..." : "Login"}
-          </button>
-        </form>
+            <button type="submit" style={styles.button} disabled={loading}>
+              {loading ? "Logging in..." : "Login"}
+            </button>
+          </form>
 
-        <p style={styles.footer}>
-          Don't have an account?{" "}
-          <Link to="/register" style={styles.link}>
-            Register
-          </Link>
-        </p>
+          <p style={styles.footer}>
+            Don’t have an account? <Link to="/register">Register</Link>
+          </p>
+        </div>
       </div>
     </div>
   );
@@ -88,59 +106,95 @@ const styles = {
   page: {
     minHeight: "100vh",
     display: "flex",
-    justifyContent: "center",
+    fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, sans-serif",
+  },
+  left: {
+    flex: 1,
+    background: "linear-gradient(135deg, #123B5D 0%, #0077B6 100%)",
+    color: "white",
+    display: "flex",
     alignItems: "center",
-    background: "linear-gradient(160deg, #F7F9FA 0%, #e0f2fe 100%)",
-    padding: "24px",
+    justifyContent: "center",
+    padding: "40px",
+  },
+  leftContent: {
+    maxWidth: 460,
+  },
+  brand: {
+    fontSize: 22,
+    fontWeight: 700,
+    marginBottom: 24,
+    letterSpacing: 0.3,
+  },
+  headline: {
+    fontSize: 34,
+    lineHeight: 1.25,
+    margin: "0 0 16px",
+    fontWeight: 700,
+  },
+  message: {
+    fontSize: 16,
+    lineHeight: 1.6,
+    opacity: 0.95,
+    marginBottom: 28,
+  },
+  points: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 12,
+    marginBottom: 28,
+  },
+  point: {
+    background: "rgba(255,255,255,0.12)",
+    border: "1px solid rgba(255,255,255,0.2)",
+    borderRadius: 10,
+    padding: "12px 14px",
+    fontSize: 15,
+  },
+  sdg: {
+    margin: 0,
+    fontSize: 14,
+    opacity: 0.85,
+  },
+  right: {
+    flex: 1,
+    background: "#F7F9FA",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "40px 20px",
   },
   card: {
     background: "white",
-    padding: "36px 40px",
-    borderRadius: 16,
-    boxShadow: "0 8px 30px rgba(18, 59, 93, 0.12)",
     width: "100%",
     maxWidth: 400,
-    border: "1px solid #e8ecf0",
-  },
-  brand: {
-    textAlign: "center",
-    marginBottom: 24,
-  },
-  logo: {
-    fontSize: 22,
-    fontWeight: 700,
-    color: "#123B5D",
-  },
-  tagline: {
-    margin: "6px 0 0",
-    fontSize: 13,
-    color: "#64748b",
+    padding: "36px 32px",
+    borderRadius: 16,
+    boxShadow: "0 8px 30px rgba(0,0,0,0.08)",
   },
   title: {
     margin: "0 0 6px",
-    textAlign: "center",
-    color: "#123B5D",
-    fontSize: 22,
+    fontSize: 26,
+    color: "#1F2933",
   },
   subtitle: {
-    textAlign: "center",
+    margin: "0 0 24px",
     color: "#64748b",
-    marginBottom: 24,
-    fontSize: 14,
+    fontSize: 15,
   },
-  field: {
+  formGroup: {
     marginBottom: 16,
   },
   label: {
     display: "block",
     marginBottom: 6,
-    fontSize: 13,
-    fontWeight: 500,
+    fontSize: 14,
     color: "#475569",
+    fontWeight: 500,
   },
   input: {
     width: "100%",
-    padding: "11px 12px",
+    padding: "12px 14px",
     border: "1px solid #cbd5e1",
     borderRadius: 8,
     fontSize: 15,
@@ -164,19 +218,14 @@ const styles = {
     padding: "10px 12px",
     borderRadius: 8,
     marginBottom: 16,
-    textAlign: "center",
     fontSize: 14,
+    textAlign: "center",
   },
   footer: {
     textAlign: "center",
     marginTop: 20,
     color: "#64748b",
     fontSize: 14,
-  },
-  link: {
-    color: "#0077B6",
-    fontWeight: 500,
-    textDecoration: "none",
   },
 };
 

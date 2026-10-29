@@ -32,25 +32,25 @@ function ReceiverDashboard() {
     }
   };
 
- useEffect(() => {
-  const load = async () => {
-    setLoading(true);
-    try {
-      const [donRes, reqRes] = await Promise.all([
-        api.get("/api/donations", { params: { status: "available" } }),
-        api.get("/api/requests"),
-      ]);
-      setDonations(donRes.data);
-      setMyRequests(reqRes.data);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  load();
-}, []);
+  useEffect(() => {
+    // Load once on mount
+    const load = async () => {
+      setLoading(true);
+      try {
+        const [donRes, reqRes] = await Promise.all([
+          api.get("/api/donations", { params: { status: "available" } }),
+          api.get("/api/requests"),
+        ]);
+        setDonations(donRes.data);
+        setMyRequests(reqRes.data);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
+  }, []);
 
   const showAvailableFood = async () => {
     setActiveTab("available");
@@ -120,7 +120,6 @@ function ReceiverDashboard() {
       <Navbar />
 
       <div style={styles.container}>
-        {/* ===== WELCOME ===== */}
         <section style={styles.welcome}>
           <h1 style={styles.welcomeTitle}>Welcome back, {firstName} 👋</h1>
           <p style={styles.welcomeText}>
@@ -140,7 +139,6 @@ function ReceiverDashboard() {
           </div>
         </section>
 
-        {/* ===== OVERVIEW CARDS ===== */}
         <section style={styles.statsGrid}>
           <div style={styles.statCard}>
             <div style={styles.statIcon}>🍱</div>
@@ -176,7 +174,6 @@ function ReceiverDashboard() {
           </div>
         )}
 
-        {/* ===== TABS ===== */}
         <div style={styles.tabs}>
           <button
             onClick={showAvailableFood}
@@ -285,8 +282,7 @@ function ReceiverDashboard() {
                         <p style={styles.cardDesc}>{r.message}</p>
                       )}
                       <p style={styles.cardMeta}>
-                        Requested:{" "}
-                        {new Date(r.requested_at).toLocaleString()}
+                        Requested: {new Date(r.requested_at).toLocaleString()}
                       </p>
                       <span
                         style={{
@@ -311,6 +307,34 @@ function ReceiverDashboard() {
                       >
                         {r.status}
                       </span>
+
+                      {r.status === "accepted" && (
+                        <div style={styles.contactBox}>
+                          <strong style={{ color: "#1967d2" }}>
+                            Contact donor to arrange pickup
+                          </strong>
+                          <p style={styles.contactText}>
+                            {r.donor_name && (
+                              <>
+                                Name: {r.donor_name}
+                                <br />
+                              </>
+                            )}
+                            {r.donor_phone && (
+                              <>
+                                Phone: {r.donor_phone}
+                                <br />
+                              </>
+                            )}
+                            {r.donor_email && <>Email: {r.donor_email}</>}
+                            {!r.donor_phone && !r.donor_email && (
+                              <span style={{ color: "#64748b" }}>
+                                No phone/email on donor profile
+                              </span>
+                            )}
+                          </p>
+                        </div>
+                      )}
                     </div>
                   </div>
                 ))}
@@ -319,7 +343,6 @@ function ReceiverDashboard() {
           </section>
         )}
 
-        {/* ===== DIGNITY MESSAGE ===== */}
         <section style={styles.dignity}>
           <h3 style={{ margin: "0 0 10px", color: "#123B5D" }}>
             Food with dignity
@@ -513,6 +536,19 @@ const styles = {
     fontSize: 12,
     fontWeight: 600,
     textTransform: "capitalize",
+  },
+  contactBox: {
+    marginTop: 12,
+    padding: 12,
+    background: "#e8f0fe",
+    borderRadius: 8,
+    border: "1px solid #c5d8f8",
+  },
+  contactText: {
+    margin: "8px 0 0",
+    color: "#1F2933",
+    lineHeight: 1.5,
+    fontSize: 14,
   },
   empty: {
     textAlign: "center",
